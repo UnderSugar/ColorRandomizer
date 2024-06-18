@@ -1,5 +1,17 @@
 const cols = document.querySelectorAll('.col')
 
+document.addEventListener('keydown', event => {
+    if(event.code.toLowerCase() === 'space'){
+        setRandomColors();
+    }
+})
+document.addEventListener('click', (event) => {
+    const type = event.target.dataset.type
+
+    if(type === 'lock') {
+        console.log('lock')
+    }
+})
 function generateRandomColor(){
     //RGB
     //#FF0000
@@ -20,8 +32,22 @@ function generateRandomColor(){
 
 function setRandomColors(){
     cols.forEach((col) => {
+        const text = col.querySelector('h2')        
+        const button = col.querySelector('button');
 
-        col.style.background = generateRandomColor()
+        const color = chroma.random(); 
+
+        text.textContent = color;
+        col.style.background = color;
+
+        setTextColor(text, color); 
+        setTextColor(button, color); 
     })
 }
+
+function setTextColor(text, color){
+    const luminance = chroma(color).luminance()
+    text.style.color = luminance > 0.5 ? 'black' : 'white'
+}
+
 setRandomColors()
