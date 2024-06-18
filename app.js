@@ -1,18 +1,48 @@
 const cols = document.querySelectorAll('.col')
 
 document.addEventListener('keydown', event => {
+    event.preventDefault()
     if(event.code.toLowerCase() === 'space'){
         setRandomColors();
     }
+    if(event.key !== ' ') {
+        console.log(event.code)
+        console.log(` Нажата клавиша: ${event.key}`)
+    }
+    if(event.code.toLowerCase() === 'keya') {
+       makeAGoodDay()
+    }
+    console.log(event.code)
 })
 document.addEventListener('click', (event) => {
     const type = event.target.dataset.type
 
     if(type === 'lock') {
-        console.log('lock')
+        const node = event.target.tagName.toLowerCase() === 'i'
+        ? event.target  
+        : event.target.children[0]
+
+        node.classList.toggle('fa-lock-open')
+        node.classList.toggle('fa-lock')
+    } else if (type ==='copy'){
+        copyToClickboard(event.target.textContent)
     }
 })
+
+
+function makeAGoodDay() {
+        cols.forEach((col) => {
+            const text = col.querySelector('h2');
+            text.textContent = 'Smile :)'
+        })
+
+}
+
+function copyToClickboard(text) {
+    return navigator.clipboard.writeText(text)
+}
 function generateRandomColor(){
+
     //RGB
     //#FF0000
     //#00FF00
@@ -32,10 +62,16 @@ function generateRandomColor(){
 
 function setRandomColors(){
     cols.forEach((col) => {
+        const isLocked = col.querySelector('i').classList.contains('fa-lock')
         const text = col.querySelector('h2')        
+
         const button = col.querySelector('button');
 
         const color = chroma.random(); 
+
+        if(isLocked){
+            return 
+        }
 
         text.textContent = color;
         col.style.background = color;
